@@ -70,15 +70,15 @@ fetch(CSV_URL)
   const headers = lines.shift();
 
   DATA = lines.map(row => {
-    let o = {};
-    headers.forEach((h,i)=>o[h.trim()] = row[i]);
-    return {
-      codigo: o.Código || o.Codigo || "",
-      nombre: o.Nombre || "",
-      precio: o.Precio || "",
-      categoria: o.Categoría || o.Categoria || ""
-    };
-  });
+  let o = {};
+  headers.forEach((h,i)=>o[h.trim()] = row[i]);
+  return {
+    codigo: o.Código || o.Codigo || "",
+    nombre: o.Nombre || "",
+    precio: o.Precio1 || o.Precio || "",
+    categoria: o.Categoría || o.Categoria || ""
+  };
+});
 });
 
 document.getElementById("q").addEventListener("input", ()=>{
