@@ -118,6 +118,24 @@ button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color
   font-size:15px;
   letter-spacing:.3px;
   opacity:.9;
+  .empty-state{
+  margin-top:34px;
+  text-align:center;
+  opacity:.85;
+}
+
+.pos-icons{
+  display:flex;
+  justify-content:center;
+  gap:26px;
+  margin-bottom:14px;
+}
+
+.pos-icon{
+  width:46px;
+  height:46px;
+  color:#f2c6cc; /* vino claro */
+  opacity:.95;
 }
 </style>
 </head>
@@ -144,7 +162,25 @@ button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color
 </div>
 <div id="res"></div>
 </div>
+<div id="emptyState" class="empty-state">
+  <div class="pos-icons">
+    <!-- BALANZA -->
+    <svg viewBox="0 0 24 24" class="pos-icon">
+      <path d="M12 3v3M5 6h14M7 6l-3 6h6l-3-6zm10 0l-3 6h6l-3-6zM6 15h12v4H6z"
+            fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
 
+    <!-- PC / POS -->
+    <svg viewBox="0 0 24 24" class="pos-icon">
+      <path d="M3 5h18v12H3zM8 21h8M12 17v4"
+            fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="empty-text">Sistema de búsqueda PLU</div>
+</div>
 </div>
 
 <script>
