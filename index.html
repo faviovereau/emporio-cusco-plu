@@ -20,7 +20,40 @@ body{font-family:Arial,Helvetica,sans-serif;background:#eef2f5;margin:0}
 h1{text-align:center;font-size:18px}
 input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc;font-size:16px}
 button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color:#fff;font-size:16px}
-.item{background:#f9fbfc;border-radius:12px;padding:14px;margin:10px 0}
+.item{
+  @keyframes popIn{
+  from{
+    opacity:0;
+    transform: scale(.96) translateY(6px);
+  }
+  to{
+    opacity:1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.item{
+  animation: popIn .18s ease-out;
+}
+  background:linear-gradient(145deg, #ffffff, #f1f1f1);
+  color:#222;
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.8);
+
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.item:active{
+  transform: translateY(1px);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
 .code{font-size:24px;font-weight:bold}
 .name{font-size:20px}
 .price{
