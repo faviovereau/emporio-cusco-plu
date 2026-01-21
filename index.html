@@ -6,8 +6,20 @@
 <title>EMPORIO CUSCO SPA</title>
 
 <style>
-body{font-family:Arial,Helvetica,sans-serif;background:#eef2f5;margin:0}
-.wrap{max-width:420px;margin:auto;padding:16px}
+/* ===== BASE ===== */
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#eef2f5;
+  margin:0;
+}
+
+.wrap{
+  max-width:420px;
+  margin:auto;
+  padding:16px;
+}
+
+/* ===== CARD PRINCIPAL ===== */
 .card{
   background:linear-gradient(145deg, #7a1f2b, #5e1620);
   color:#fff;
@@ -17,55 +29,33 @@ body{font-family:Arial,Helvetica,sans-serif;background:#eef2f5;margin:0}
     0 12px 24px rgba(0,0,0,.35),
     inset 0 1px 0 rgba(255,255,255,.08);
 }
-h1{text-align:center;font-size:18px}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc;font-size:16px}
-button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color:#fff;font-size:16px}
-.item{
-  @keyframes popIn{
-  from{
-    opacity:0;
-    transform: scale(.96) translateY(6px);
-  }
-  to{
-    opacity:1;
-    transform: scale(1) translateY(0);
-  }
-}
 
-.item{
-  animation: popIn .18s ease-out;
-}
-  background:linear-gradient(145deg, #ffffff, #f1f1f1);
-  color:#222;
-  border-radius:14px;
-  padding:14px;
-  margin:12px 0;
-
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.8);
-
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.item:active{
-  transform: translateY(1px);
-  box-shadow:
-    0 2px 6px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.6);
-}
-.code{font-size:24px;font-weight:bold}
-.name{font-size:20px}
-.price{
-  margin-top:6px;
-  color:#222;        /* texto oscuro */
+h1{
+  text-align:center;
   font-size:18px;
-  font-weight:500;
+  margin-top:0;
 }
-.small{font-size:13px;color:#777}
-.hide{display:none} 
-/* ===== MEJORAS VISUALES ===== */
 
+/* ===== LOGIN ===== */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:0;
+  background:#111;
+  color:#fff;
+  font-size:16px;
+}
+
+/* ===== BUSCADOR ===== */
 .search-box{
   display:flex;
   align-items:center;
@@ -74,11 +64,10 @@ button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color
   padding:14px 16px;
   margin-bottom:14px;
 
-  /* 3D fuerte */
   box-shadow:
     0 8px 16px rgba(0,0,0,.35),
     inset 0 1px 0 rgba(255,255,255,.6);
-  
+
   transform: translateY(-1px);
 }
 
@@ -101,23 +90,57 @@ button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color
   font-size:17px;
   width:100%;
   background:transparent;
-  .empty-state{
-  margin-top:30px;
-  text-align:center;
-  opacity:.85;
-  transition: opacity .2s ease;
 }
 
-.empty-icon{
-  font-size:36px;
-  margin-bottom:10px;
-  opacity:.9;
+/* ===== RESULTADOS ===== */
+#res{
+  margin-top:6px;
 }
 
-.empty-text{
-  font-size:15px;
-  letter-spacing:.3px;
-  opacity:.9;
+.item{
+  background:linear-gradient(145deg, #ffffff, #f1f1f1);
+  color:#222;
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.8);
+
+  animation: popIn .18s ease-out;
+}
+
+@keyframes popIn{
+  from{
+    opacity:0;
+    transform: scale(.96) translateY(6px);
+  }
+  to{
+    opacity:1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.code{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.name{
+  font-size:20px;
+}
+
+.price{
+  margin-top:6px;
+  color:#222;
+  font-size:18px;
+  font-weight:500;
+}
+
+/* ===== UTIL ===== */
+.hide{
+  display:none;
 }
 </style>
 </head>
@@ -125,38 +148,41 @@ button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color
 <body>
 <div class="wrap">
 
+<!-- LOGIN -->
 <div class="card" id="login">
-<h1>EMPORIO CUSCO SPA</h1>
-<input id="pwd" type="password" placeholder="Contraseña">
-<br><br>
-<button onclick="auth()">Entrar</button>
+  <h1>EMPORIO CUSCO SPA</h1>
+  <input id="pwd" type="password" placeholder="Contraseña">
+  <br><br>
+  <button onclick="auth()">Entrar</button>
 </div>
 
+<!-- APP -->
 <div class="card hide" id="app">
-<h1>BUSCAR PLU</h1>
-<div class="search-box">
-  <div id="emptyState" class="empty-state">
-  <div class="empty-icon">🔍</div>
-  <div class="empty-text">Busca un producto o código</div>
-</div>
-  <span class="search-icon">🔍</span>
-  <input id="q" placeholder="Buscar producto o código">
-</div>
-<div id="res"></div>
+  <h1>BUSCAR PLU</h1>
+
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input id="q" placeholder="Buscar producto o código">
+  </div>
+
+  <div id="res"></div>
 </div>
 
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const PASSWORD = "admin2026@";
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 
 let DATA = [];
 
+/* ===== UTILS ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
 
+/* ===== LOGIN ===== */
 function auth(){
   if(document.getElementById("pwd").value === PASSWORD){
     document.getElementById("login").classList.add("hide");
@@ -166,36 +192,35 @@ function auth(){
   }
 }
 
+/* ===== LOAD DATA ===== */
 fetch(CSV_URL)
-.then(r => r.text())
-.then(text => {
-  const lines = text.trim().split("\n").map(l => l.split(","));
-  const headers = lines.shift();
+  .then(r => r.text())
+  .then(text => {
+    const lines = text.trim().split("\n").map(l => l.split(","));
+    const headers = lines.shift();
 
-  DATA = lines.map(row => {
-  let o = {};
-  headers.forEach((h,i)=>o[h.trim()] = row[i]);
-  return {
-    codigo: o.Código || o.Codigo || "",
-    nombre: o.Nombre || "",
-    precio: o.Precio1 || o.Precio || "",
-    categoria: o.Categoría || o.Categoria || ""
-  };
-});
-});
+    DATA = lines.map(row => {
+      let o = {};
+      headers.forEach((h,i)=>o[h.trim()] = row[i]);
+      return {
+        codigo: o.Código || o.Codigo || "",
+        nombre: o.Nombre || "",
+        precio: o.Precio1 || o.Precio || "",
+        categoria: o.Categoría || o.Categoria || ""
+      };
+    });
+  });
+
+/* ===== SEARCH ===== */
 document.getElementById("q").addEventListener("input", ()=>{
   const k = norm(q.value);
   const res = document.getElementById("res");
-  const empty = document.getElementById("emptyState");
 
   res.innerHTML = "";
 
   if(k.length === 0){
-    empty.style.display = "block";
-    return;
+    return; // área limpia
   }
-
-  empty.style.display = "none";
 
   DATA
     .filter(x => norm(x.nombre).includes(k) || x.codigo.includes(k))
