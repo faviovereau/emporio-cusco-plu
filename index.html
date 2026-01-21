@@ -1,60 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMPORIO CUSCO SPA</title>
+
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#eef2f5;margin:0}
+.wrap{max-width:420px;margin:auto;padding:16px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 10px 20px rgba(0,0,0,.1)}
+h1{text-align:center;font-size:18px}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc;font-size:16px}
+button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color:#fff;font-size:16px}
+.item{background:#f9fbfc;border-radius:12px;padding:14px;margin:10px 0}
+.code{font-size:24px;font-weight:bold}
+.name{font-size:20px}
+.price{margin-top:6px}
+.small{font-size:13px;color:#777}
+.hide{display:none}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<div class="card" id="login">
+<h1>EMPORIO CUSCO SPA</h1>
+<input id="pwd" type="password" placeholder="Contraseña">
+<br><br>
+<button onclick="auth()">Entrar</button>
+</div>
+
+<div class="card hide" id="app">
+<h1>BUSCAR PLU</h1>
+<input id="q" placeholder="Buscar por nombre o código">
+<div id="res"></div>
+</div>
+
+</div>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const PASSWORD = "admin2026@";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 
-  const PASSWORD = "admin2026@";
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
+let DATA = [];
 
-  const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-  let DATA = [];
+function norm(s){
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
 
-  window.auth = function(){
-    if(document.getElementById('pwd').value === PASSWORD){
-      document.getElementById('login').classList.add('hide');
-      document.getElementById('app').classList.remove('hide');
-    } else {
-      alert("Contraseña incorrecta");
-    }
+function auth(){
+  if(document.getElementById("pwd").value === PASSWORD){
+    document.getElementById("login").classList.add("hide");
+    document.getElementById("app").classList.remove("hide");
+  } else {
+    alert("Contraseña incorrecta");
   }
+}
 
-  async function loadData(){
-    const res = await fetch(CSV_URL);
-    const text = await res.text();
-    const lines = text.trim().split("\n").map(l => l.split(","));
-    const headers = lines.shift().map(h => h.trim());
+fetch(CSV_URL)
+.then(r => r.text())
+.then(text => {
+  const lines = text.trim().split("\n").map(l => l.split(","));
+  const headers = lines.shift();
 
-    DATA = lines.map(row => {
-      let obj = {};
-      headers.forEach((h,i)=> obj[h] = row[i]);
-      return {
-        codigo: (obj.Código || obj.Codigo || "").trim(),
-        nombre: (obj.Nombre || "").trim(),
-        precio: (obj.Precio || "").trim(),
-        categoria: (obj.Categoría || obj.Categoria || "").trim()
-      };
-    });
-  }
-
-  loadData();
-
-  document.getElementById('q').addEventListener('input', ()=>{
-    const k = norm(document.getElementById('q').value);
-    const res = document.getElementById('res');
-    res.innerHTML = "";
-
-    DATA
-      .filter(x => norm(x.nombre).includes(k) || x.codigo.includes(k))
-      .forEach(x=>{
-        const d = document.createElement('div');
-        d.className = 'item';
-        d.innerHTML = `
-          <div class="code">${x.codigo}</div>
-          <div class="name">${x.nombre}</div>
-          <div class="price">$${x.precio}</div>
-          <div class="small">Categoría ${x.categoria}</div>
-        `;
-        res.appendChild(d);
-      });
+  DATA = lines.map(row => {
+    let o = {};
+    headers.forEach((h,i)=>o[h.trim()] = row[i]);
+    return {
+      codigo: o.Código || o.Codigo || "",
+      nombre: o.Nombre || "",
+      precio: o.Precio || "",
+      categoria: o.Categoría || o.Categoria || ""
+    };
   });
+});
 
+document.getElementById("q").addEventListener("input", ()=>{
+  const k = norm(q.value);
+  res.innerHTML = "";
+  DATA.filter(x =>
+    norm(x.nombre).includes(k) || x.codigo.includes(k)
+  ).forEach(x=>{
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `
+      <div class="code">${x.codigo}</div>
+      <div class="name">${x.nombre}</div>
+      <div class="price">$${x.precio}</div>
+      <div class="small">Categoría ${x.categoria}</div>
+    `;
+    res.appendChild(d);
+  });
 });
 </script>
+
+</body>
+</html>
