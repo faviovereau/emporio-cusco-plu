@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EMPORIO CUSCO SPA · PLU</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;background:#eef2f5;margin:0}
+.wrap{max-width:420px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 10px 20px rgba(0,0,0,.08)}
+h1{text-align:center;font-size:18px;margin:8px 0 12px}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #ddd;font-size:16px}
+.item{background:#f9fbfc;border-radius:12px;padding:14px;margin:10px 0}
+.code{font-size:22px;font-weight:700}
+.name{font-size:20px}
+.price{color:#444;margin-top:6px}
+.small{color:#777;font-size:13px}
+.hide{display:none}
+button{width:100%;padding:14px;border-radius:10px;border:0;background:#111;color:#fff;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="login">
+    <h1>EMPORIO CUSCO SPA</h1>
+    <input id="pwd" type="password" placeholder="Contraseña"/>
+    <div style="height:8px"></div>
+    <button onclick="auth()">Entrar</button>
+    <p class="small">V1 funcional</p>
+  </div>
+
+  <div class="card hide" id="app">
+    <h1>EMPORIO CUSCO SPA</h1>
+    <input id="q" placeholder="Buscar por nombre o código"/>
+    <div id="res"></div>
+    <p class="small">Datos de ejemplo. Conecta tu Google Sheets para producción.</p>
+  </div>
+</div>
+
+<script>
+const PASSWORD="admin2026@";
+const data=[
+  {codigo:"209",nombre:"Plátano",precio:"$2.100",categoria:"1"},
+  {codigo:"310",nombre:"Manzana Roja",precio:"$1.800",categoria:"1"},
+  {codigo:"415",nombre:"Arroz",precio:"$1.500",categoria:"2"}
+];
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function auth(){
+  if(document.getElementById('pwd').value===PASSWORD){
+    document.getElementById('login').classList.add('hide');
+    document.getElementById('app').classList.remove('hide');
+  } else alert('Contraseña incorrecta');
+}
+document.getElementById('q').addEventListener('input',()=>{
+  const k=norm(document.getElementById('q').value); 
+  const res=document.getElementById('res'); res.innerHTML='';
+  data.filter(x=>norm(x.nombre).includes(k)||x.codigo.includes(k)).forEach(x=>{
+    const d=document.createElement('div'); d.className='item';
+    d.innerHTML=`<div class="code">${x.codigo}</div>
+                 <div class="name">${x.nombre}</div>
+                 <div class="price">${x.precio}</div>
+                 <div class="small">Categoría ${x.categoria}</div>`;
+    res.appendChild(d);
+  });
+});
+</script>
+</body>
+</html>
