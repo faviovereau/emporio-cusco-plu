@@ -8,31 +8,50 @@
 <style>
 /* ===== BASE ===== */
 body{
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family:'Inter', Arial, Helvetica, sans-serif;
   margin:0;
 
   background:
-    radial-gradient(circle at top, rgba(122,31,43,.10), transparent 55%),
-    linear-gradient(180deg, #f4f6f9 0%, #e9edf2 100%);
+    radial-gradient(
+      circle at 50% 140px,
+      rgba(122,31,43,.18),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #f6f7f9 0%,
+      #eceff3 100%
+    );
 }
 
 .wrap{
   max-width:420px;
   margin:auto;
-  padding:16px;
+  padding:24px 16px 32px;
+  min-height:100vh;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start; /* NO center */
+  padding-top:80px; /* CLAVE */
 }
 
 /* ===== CARD PRINCIPAL ===== */
 .card{
-  background:linear-gradient(160deg, #7a1f2b, #5e1620);
-  color:#fff;
-  border-radius:22px;
-  padding:22px;
+  position:relative;
+}
 
-  box-shadow:
-    0 20px 40px rgba(0,0,0,.35),
-    0 6px 14px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.10);
+.card::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-26px;
+  width:70%;
+  height:26px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse, rgba(0,0,0,.35), transparent 70%);
+  filter:blur(18px);
+  z-index:-1;
 }
 
 h1{
