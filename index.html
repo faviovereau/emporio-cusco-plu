@@ -112,7 +112,12 @@ h1{
   margin-bottom:16px;
   box-shadow:0 14px 28px rgba(0,0,0,.30);
 }
-
+/* ===== BUSCADOR: control con teclado móvil ===== */
+@media (max-height: 700px) {
+  .search-box:focus-within {
+    transform: translateY(-12px);
+  }
+}
 .search-icon{
   font-size:20px;
   margin-right:12px;
