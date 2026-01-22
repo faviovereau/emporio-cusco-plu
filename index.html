@@ -35,7 +35,7 @@ body{
     inset 0 1px 0 rgba(255,255,255,.10);
 }
 
-/* LOGIN */
+/* ===== LOGIN ===== */
 #login{
   background:linear-gradient(160deg, #ffffff, #f4f4f4);
   animation:loginIn .45s ease-out forwards;
@@ -79,16 +79,18 @@ body{
   font-weight:600;
   letter-spacing:1.5px;
   color:#777;
-  text-shadow:0 1px 0 #fff, 0 2px 4px rgba(0,0,0,.18);
+  text-shadow:
+    0 1px 0 #fff,
+    0 2px 4px rgba(0,0,0,.18);
 }
 
-/* APP */
+/* ===== APP ===== */
 #app{
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
   color:#fff;
   opacity:0;
   transform:translateY(20px);
-  transition:.35s ease;
+  transition:all .35s ease;
 }
 
 #app.show{
@@ -102,15 +104,19 @@ h1{
   margin-top:0;
 }
 
-/* BUSCADOR */
+/* ===== BUSCADOR ===== */
 .search-box{
   display:flex;
   align-items:center;
-  background:linear-gradient(145deg, #fff, #ececec);
+  background:linear-gradient(145deg, #ffffff, #ececec);
   border-radius:18px;
   padding:16px 18px;
   margin-bottom:16px;
-  box-shadow:0 14px 28px rgba(0,0,0,.30);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.30),
+    0 4px 10px rgba(0,0,0,.20),
+    inset 0 2px 4px rgba(255,255,255,.9),
+    inset 0 -1px 2px rgba(0,0,0,.08);
 }
 
 .search-icon{
@@ -127,16 +133,25 @@ h1{
   background:transparent;
 }
 
-/* RESULTADOS */
+/* ===== RESULTADOS ===== */
+#res{ margin-top:6px; }
+
 .item{
-  background:#fff;
+  background:linear-gradient(145deg, #ffffff, #f1f1f1);
   color:#222;
   border-radius:14px;
   padding:14px;
   margin:12px 0;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.8);
 }
 
-/* UTIL */
+.code{ font-size:24px; font-weight:bold; }
+.name{ font-size:20px; }
+.price{ margin-top:6px; font-size:18px; }
+
+/* ===== UTIL ===== */
 .hide{ display:none; }
 </style>
 </head>
@@ -144,6 +159,7 @@ h1{
 <body>
 <div class="wrap">
 
+<!-- LOGIN -->
 <div class="card" id="login">
   <div class="login-row">
     <input id="pwd" type="password" placeholder="Contraseña">
@@ -152,6 +168,7 @@ h1{
   <div class="login-brand">EMPORIO CUSCO SPA</div>
 </div>
 
+<!-- APP -->
 <div class="card hide" id="app">
   <h1>BUSCAR PLU</h1>
   <div class="search-box">
@@ -164,19 +181,69 @@ h1{
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const PASSWORD = "admin2026@";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 let DATA = [];
 
+/* ===== UTILS ===== */
+function norm(s){
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
+
+/* ===== LOGIN ===== */
 function auth(){
   if(document.getElementById("pwd").value === PASSWORD){
     document.getElementById("login").classList.add("hide");
     const app = document.getElementById("app");
     app.classList.remove("hide");
-    setTimeout(()=>app.classList.add("show"),50);
+    setTimeout(()=>{
+      app.classList.add("show");
+      document.getElementById("q").focus();
+    },50);
   } else {
     alert("Contraseña incorrecta");
   }
 }
+
+/* ===== LOAD DATA ===== */
+fetch(CSV_URL)
+  .then(r => r.text())
+  .then(text => {
+    const lines = text.trim().split("\n").map(l => l.split(","));
+    const headers = lines.shift();
+
+    DATA = lines.map(row => {
+      let o = {};
+      headers.forEach((h,i)=>o[h.trim()] = row[i] || "");
+      return {
+        codigo: o.Código || o.Codigo || "",
+        nombre: o.Nombre || "",
+        precio: o.Precio1 || o.Precio || ""
+      };
+    });
+  });
+
+/* ===== SEARCH ===== */
+document.getElementById("q").addEventListener("input", ()=>{
+  const k = norm(q.value);
+  const res = document.getElementById("res");
+  res.innerHTML = "";
+  if(k.length === 0) return;
+
+  DATA
+    .filter(x => norm(x.nombre).includes(k) || x.codigo.includes(k))
+    .forEach(x=>{
+      const d = document.createElement("div");
+      d.className = "item";
+      d.innerHTML = `
+        <div class="code">${x.codigo}</div>
+        <div class="name">${x.nombre}</div>
+        <div class="price">$${x.precio}</div>
+      `;
+      res.appendChild(d);
+    });
+});
 </script>
 
 </body>
