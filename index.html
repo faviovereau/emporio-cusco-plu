@@ -24,7 +24,6 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
-  padding-top:25vh;   /* 👈 CLAVE */
 }
 
 /* ===== CARD ===== */
@@ -94,7 +93,9 @@ body{
   transform:translateY(20px);
   transition:all .35s ease;
 }
-
+#app{
+  margin-top:25vh;   /* 👈 aquí va el 25% */
+}
 #app.show{
   opacity:1;
   transform:none;
@@ -141,8 +142,13 @@ h1{
 }
 
 /* ===== RESULTADOS ===== */
-#res{ margin-top:6px; }
-
+#res{ margin-top:6px; 
+}
+#res{
+  max-height:55vh;
+  overflow-y:auto;
+  padding-bottom:16px;
+}
 .item{
   background:linear-gradient(145deg, #ffffff, #f1f1f1);
   color:#222;
