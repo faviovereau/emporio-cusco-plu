@@ -8,9 +8,12 @@
 <style>
 /* ===== BASE ===== */
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#eef2f5;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
   margin:0;
+
+  background:
+    radial-gradient(circle at top, rgba(122,31,43,.10), transparent 55%),
+    linear-gradient(180deg, #f4f6f9 0%, #e9edf2 100%);
 }
 
 .wrap{
@@ -21,13 +24,15 @@ body{
 
 /* ===== CARD PRINCIPAL ===== */
 .card{
-  background:linear-gradient(145deg, #7a1f2b, #5e1620);
+  background:linear-gradient(160deg, #7a1f2b, #5e1620);
   color:#fff;
-  border-radius:18px;
-  padding:18px;
+  border-radius:22px;
+  padding:22px;
+
   box-shadow:
-    0 12px 24px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.08);
+    0 20px 40px rgba(0,0,0,.35),
+    0 6px 14px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.10);
 }
 
 h1{
@@ -81,9 +86,12 @@ button{
 .search-icon{
   font-size:20px;
   margin-right:12px;
+  color:#666;
+  transition: color .2s ease;
+}
+.search-box:focus-within .search-icon{
   color:#7a1f2b;
 }
-
 .search-box input{
   border:0;
   outline:none;
