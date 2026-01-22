@@ -35,7 +35,7 @@ body{
     inset 0 1px 0 rgba(255,255,255,.10);
 }
 
-/* LOGIN */
+/* LOGIN (INTOCABLE) */
 #login{
   background:linear-gradient(160deg, #ffffff, #f4f4f4);
   animation:loginIn .45s ease-out forwards;
@@ -102,7 +102,7 @@ h1{
   margin-top:0;
 }
 
-/* BUSCADOR */
+/* ===== BUSCADOR (SIN CAMBIOS VISUALES) ===== */
 .search-box{
   display:flex;
   align-items:center;
@@ -144,6 +144,7 @@ h1{
 <body>
 <div class="wrap">
 
+<!-- LOGIN -->
 <div class="card" id="login">
   <div class="login-row">
     <input id="pwd" type="password" placeholder="Contraseña">
@@ -152,6 +153,7 @@ h1{
   <div class="login-brand">EMPORIO CUSCO SPA</div>
 </div>
 
+<!-- APP -->
 <div class="card hide" id="app">
   <h1>BUSCAR PLU</h1>
   <div class="search-box">
@@ -164,9 +166,12 @@ h1{
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const PASSWORD = "admin2026@";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 let DATA = [];
 
+/* ===== LOGIN (INTOCABLE) ===== */
 function auth(){
   if(document.getElementById("pwd").value === PASSWORD){
     document.getElementById("login").classList.add("hide");
@@ -177,6 +182,52 @@ function auth(){
     alert("Contraseña incorrecta");
   }
 }
+
+/* ===== BUSCADOR: LÓGICA ===== */
+function norm(s){
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
+
+fetch(CSV_URL)
+  .then(r => r.text())
+  .then(text => {
+    const lines = text.trim().split("\n").map(l => l.split(","));
+    const headers = lines.shift();
+
+    DATA = lines.map(row => {
+      let o = {};
+      headers.forEach((h,i)=>o[h.trim()] = row[i] || "");
+      return {
+        codigo: o.Código || o.Codigo || "",
+        nombre: o.Nombre || "",
+        precio: o.Precio1 || o.Precio || ""
+      };
+    });
+  });
+
+document.getElementById("q").addEventListener("input", ()=>{
+  const k = norm(q.value);
+  const res = document.getElementById("res");
+  res.innerHTML = "";
+
+  if(k.length === 0) return;
+
+  DATA
+    .filter(x =>
+      norm(x.nombre).includes(k) ||
+      x.codigo.includes(k)
+    )
+    .forEach(x=>{
+      const d = document.createElement("div");
+      d.className = "item";
+      d.innerHTML = `
+        <div><strong>${x.codigo}</strong></div>
+        <div>${x.nombre}</div>
+        <div>$${x.precio}</div>
+      `;
+      res.appendChild(d);
+    });
+});
 </script>
 
 </body>
