@@ -112,6 +112,26 @@ h1{
   margin-bottom:16px;
   box-shadow:0 14px 28px rgba(0,0,0,.30);
 }
+  /* ===== CONTENEDOR BUSCADOR ===== */
+.search-area{
+  max-height: calc(100vh - 260px);
+  overflow: hidden;
+}
+
+/* RESULTADOS CON SCROLL INTERNO */
+#res{
+  overflow-y: auto;
+  max-height: calc(100vh - 340px);
+  padding-bottom: 16px;
+}
+
+/* Ajuste móvil con teclado */
+@media (max-height: 700px){
+  #res{
+    max-height: calc(100vh - 420px);
+  }
+}
+
 /* ===== BUSCADOR: control con teclado móvil ===== */
 @media (max-height: 700px) {
   .search-box:focus-within {
@@ -161,13 +181,13 @@ h1{
 <!-- APP -->
 <div class="card hide" id="app">
   <h1>BUSCAR PLU</h1>
+  <div class="search-area">
   <div class="search-box">
     <span class="search-icon">🔍</span>
     <input id="q" placeholder="Buscar producto o código">
   </div>
-  <div id="res"></div>
-</div>
 
+  <div id="res"></div>
 </div>
 
 <script>
