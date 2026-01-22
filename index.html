@@ -38,26 +38,31 @@ body{
 
 /* ===== CARD PRINCIPAL ===== */
 .card{
-  position:relative;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.35),
+    0 6px 14px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.10);
 }
-
-.card::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:-26px;
-  width:70%;
-  height:26px;
-  transform:translateX(-50%);
-  background:radial-gradient(ellipse, rgba(0,0,0,.35), transparent 70%);
-  filter:blur(18px);
-  z-index:-1;
+#app.card{
+  background:linear-gradient(160deg, #7a1f2b, #5e1620);
+  color:#fff;
 }
-
+#login.card{
+  background:linear-gradient(160deg, #ffffff, #f1f1f1);
+  color:#000;
+}
 h1{
   text-align:center;
   font-size:18px;
   margin-top:0;
+}
+#app h1{
+  color:#fff;
+}
+#login h1{
+  color:#000;
 }
 
 /* ===== LOGIN ===== */
