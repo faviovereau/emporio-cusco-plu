@@ -28,7 +28,6 @@ body{
 /* ===== CARD ===== */
 .card{
   border-radius:22px;
-  padding:22px;
   box-shadow:
     0 20px 40px rgba(0,0,0,.35),
     0 6px 14px rgba(0,0,0,.25),
@@ -37,6 +36,7 @@ body{
 
 /* ===== LOGIN (INTOCABLE) ===== */
 #login{
+  padding:22px;
   background:linear-gradient(160deg, #ffffff, #f4f4f4);
   animation:loginIn .45s ease-out forwards;
 }
@@ -84,11 +84,13 @@ body{
 
 /* ===== APP ===== */
 #app{
+  padding:0;
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
   color:#fff;
   opacity:0;
   transform:translateY(20px);
   transition:.35s ease;
+  overflow:hidden;
 }
 
 #app.show{
@@ -96,28 +98,31 @@ body{
   transform:none;
 }
 
-h1{
-  text-align:center;
-  font-size:18px;
-  margin-top:0;
+/* ===== FRANJA SUPERIOR ===== */
+.app-header{
+  height:52px;
+  background:#E3E0DF;
+  color:#333;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  letter-spacing:1px;
 }
 
-/* ===== BUSCADOR (SIN CAMBIOS VISUALES) ===== */
+/* ===== BUSCADOR FIJO ===== */
+.search-fixed{
+  padding:16px;
+  background:linear-gradient(160deg, #7a1f2b, #5e1620);
+}
+
 .search-box{
   display:flex;
   align-items:center;
   background:linear-gradient(145deg, #fff, #ececec);
   border-radius:18px;
   padding:16px 18px;
-  margin-bottom:16px;
   box-shadow:0 14px 28px rgba(0,0,0,.30);
-}
-
-/* Control teclado móvil */
-@media (max-height:700px){
-  .search-box:focus-within{
-    transform:translateY(-12px);
-  }
 }
 
 .search-icon{
@@ -134,16 +139,38 @@ h1{
   background:transparent;
 }
 
-/* ===== RESULTADOS ===== */
+/* ===== RESULTADOS (SCROLL) ===== */
+#res{
+  padding:16px;
+  overflow-y:auto;
+  max-height:calc(100vh - 52px - 96px);
+}
+
+/* ===== ITEMS ===== */
 .item{
   background:#fff;
   color:#222;
   border-radius:14px;
   padding:14px;
   margin:12px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
 }
 
-/* ===== RESALTADO V1.1 ===== */
+.item strong{
+  font-size:22px;
+}
+
+.item div:nth-child(2){
+  font-size:18px;
+  font-weight:600;
+}
+
+.item div:last-child{
+  font-size:16px;
+  opacity:.9;
+}
+
+/* ===== RESALTADO ===== */
 mark{
   background:#ffe6ea;
   color:#7a1f2b;
@@ -170,11 +197,16 @@ mark{
 
 <!-- APP -->
 <div class="card hide" id="app">
-  <h1>BUSCAR PLU</h1>
 
-  <div class="search-box">
-    <span class="search-icon">🔍</span>
-    <input id="q" placeholder="Buscar producto o código">
+  <div class="app-header">
+    EMPORIO CUSCO SPA
+  </div>
+
+  <div class="search-fixed">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input id="q" placeholder="Buscar producto o código">
+    </div>
   </div>
 
   <div id="res"></div>
@@ -188,7 +220,7 @@ const PASSWORD = "admin2026@";
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 let DATA = [];
 
-/* ===== LOGIN (INTOCABLE) ===== */
+/* ===== LOGIN ===== */
 function auth(){
   if(document.getElementById("pwd").value === PASSWORD){
     document.getElementById("login").classList.add("hide");
@@ -200,7 +232,7 @@ function auth(){
   }
 }
 
-/* ===== BUSCADOR: UTIL ===== */
+/* ===== UTIL ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
@@ -223,7 +255,7 @@ fetch(CSV_URL)
     });
   });
 
-/* ===== BUSCADOR V1.1 ===== */
+/* ===== BUSCADOR ===== */
 document.getElementById("q").addEventListener("input", ()=>{
   const raw = q.value.trim();
   const k = norm(raw);
@@ -241,23 +273,8 @@ document.getElementById("q").addEventListener("input", ()=>{
     return norm(x.nombre).includes(k) || x.codigo.includes(raw);
   });
 
-  /* Prioridad: empieza primero */
-  results.sort((a,b)=>{
-    const aStart = isNumberSearch
-      ? a.codigo.startsWith(raw)
-      : norm(a.nombre).startsWith(k);
-
-    const bStart = isNumberSearch
-      ? b.codigo.startsWith(raw)
-      : norm(b.nombre).startsWith(k);
-
-    return (bStart === aStart) ? 0 : bStart ? 1 : -1;
-  });
-
-  /* TOP 10 */
   results.slice(0,15).forEach(x=>{
     let nombre = x.nombre;
-
     if(!isNumberSearch){
       const reg = new RegExp(`(${raw})`, "ig");
       nombre = x.nombre.replace(reg, "<mark>$1</mark>");
