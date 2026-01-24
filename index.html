@@ -18,13 +18,11 @@ body{
 .wrap{
   max-width:420px;
   margin:auto;
-  padding:24px 16px;
+  padding:16px;
   min-height:100vh;
-  display:flex;
-  justify-content:center;
 }
 
-/* ===== CARD ===== */
+/* ===== CARD GENERAL ===== */
 .card{
   border-radius:22px;
   box-shadow:
@@ -34,9 +32,8 @@ body{
 
 /* ===== LOGIN (INTOCABLE) ===== */
 #login{
-  width:100%;
-  padding:22px;
   background:linear-gradient(160deg, #ffffff, #f4f4f4);
+  padding:22px;
   animation:loginIn .45s ease-out forwards;
 }
 
@@ -59,11 +56,9 @@ body{
 }
 
 #login button{
-  min-width:96px;
   padding:16px;
   border-radius:16px;
   border:0;
-  font-size:16px;
   font-weight:600;
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
   color:#fff;
@@ -72,7 +67,6 @@ body{
 .login-brand{
   margin-top:24px;
   text-align:center;
-  font-size:18px;
   font-weight:600;
   letter-spacing:1.5px;
   color:#777;
@@ -80,52 +74,42 @@ body{
 
 /* ===== APP ===== */
 #app{
-  width:100%;
-  height:calc(100vh - 48px);
-  display:flex;
-  flex-direction:column;
-  background:linear-gradient(160deg, #7a1f2b, #5e1620);
-  color:#fff;
-  overflow:hidden;
-  opacity:0;
-  transform:translateY(20px);
-  transition:.35s ease;
+  display:none;
+  height:100vh;
 }
 
-#app.show{
-  opacity:1;
-  transform:none;
-}
-
-/* ===== HEADER FIJO ===== */
+/* ===== HEADER FIJO (EMPRESA) ===== */
 .app-header{
-  background:#e7e3df;
-  color:#333;
+  position:sticky;
+  top:0;
+  background:#e3e0df;
   text-align:center;
-  font-weight:600;
-  letter-spacing:1.2px;
-  padding:12px;
+  padding:14px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  z-index:10;
 }
 
 /* ===== BUSCADOR FIJO ===== */
-.app-search{
-  padding:14px;
+.search-container{
+  position:sticky;
+  top:48px;
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
+  padding:18px;
+  z-index:9;
 }
 
 .search-box{
   display:flex;
   align-items:center;
-  background:linear-gradient(145deg, #fff, #ececec);
+  background:#fff;
   border-radius:18px;
-  padding:16px 18px;
-  box-shadow:0 10px 22px rgba(0,0,0,.35);
+  padding:16px;
+  box-shadow:0 14px 28px rgba(0,0,0,.3);
 }
 
 .search-icon{
-  font-size:20px;
   margin-right:12px;
-  color:#666;
 }
 
 .search-box input{
@@ -133,25 +117,21 @@ body{
   outline:none;
   font-size:17px;
   width:100%;
-  background:transparent;
 }
 
-/* ===== RESULTADOS (SCROLL) ===== */
+/* ===== RESULTADOS (SCROLL INDEPENDIENTE) ===== */
 .results{
-  flex:1;
+  height:calc(100vh - 160px);
   overflow-y:auto;
   padding:16px;
 }
 
 .item{
   background:#fff;
-  color:#222;
   border-radius:16px;
   padding:16px;
   margin-bottom:14px;
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.9);
+  box-shadow:0 6px 14px rgba(0,0,0,.18);
 }
 
 .item .code{
@@ -160,13 +140,11 @@ body{
 }
 
 .item .name{
-  font-size:18px;
-  font-weight:600;
+  font-weight:700;
 }
 
 .item .price{
-  margin-top:4px;
-  font-size:17px;
+  color:#555;
 }
 
 /* ===== UTIL ===== */
@@ -187,11 +165,10 @@ body{
 </div>
 
 <!-- APP -->
-<div class="card hide" id="app">
-
+<div id="app">
   <div class="app-header">EMPORIO CUSCO SPA</div>
 
-  <div class="app-search">
+  <div class="search-container">
     <div class="search-box">
       <span class="search-icon">🔍</span>
       <input id="q" placeholder="Buscar producto o código">
@@ -199,7 +176,6 @@ body{
   </div>
 
   <div class="results" id="res"></div>
-
 </div>
 
 </div>
@@ -207,16 +183,13 @@ body{
 <script>
 const PASSWORD = "admin2026@";
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
-let DATA = [];
+let DATA=[];
 
 function auth(){
-  if(pwd.value === PASSWORD){
-    login.classList.add("hide");
-    app.classList.remove("hide");
-    setTimeout(()=>app.classList.add("show"),50);
-  } else {
-    alert("Contraseña incorrecta");
-  }
+  if(pwd.value===PASSWORD){
+    login.style.display="none";
+    app.style.display="block";
+  }else alert("Contraseña incorrecta");
 }
 
 function norm(s){
@@ -224,38 +197,31 @@ function norm(s){
 }
 
 fetch(CSV_URL)
-  .then(r=>r.text())
-  .then(t=>{
-    const l=t.trim().split("\n").map(x=>x.split(","));
-    const h=l.shift();
-    DATA=l.map(r=>{
-      let o={}; h.forEach((k,i)=>o[k]=r[i]||"");
-      return {
-        codigo:o.Código||o.Codigo||"",
-        nombre:o.Nombre||"",
-        precio:o.Precio1||o.Precio||""
-      };
-    });
-  });
+.then(r=>r.text())
+.then(t=>{
+  const [h,...l]=t.trim().split("\n").map(r=>r.split(","));
+  DATA=l.map(r=>({
+    codigo:r[0],nombre:r[1],precio:r[2]
+  }));
+});
 
 q.addEventListener("input",()=>{
-  const k=norm(q.value);
   res.innerHTML="";
-  if(!k) return;
+  const k=norm(q.value);
+  if(!k)return;
 
   DATA.filter(x=>norm(x.nombre).includes(k)||x.codigo.includes(k))
-    .slice(0,20)
-    .forEach(x=>{
-      const d=document.createElement("div");
-      d.className="item";
-      d.innerHTML=`
+  .slice(0,20)
+  .forEach(x=>{
+    res.innerHTML+=`
+      <div class="item">
         <div class="code">${x.codigo}</div>
         <div class="name">${x.nombre}</div>
         <div class="price">$${x.precio}</div>
-      `;
-      res.appendChild(d);
-    });
+      </div>`;
+  });
 });
 </script>
+
 </body>
 </html>
