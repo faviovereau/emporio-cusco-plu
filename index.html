@@ -84,12 +84,14 @@ body{
 
 /* ===== APP ===== */
 #app{
-  padding:0;
+  height:calc(100vh - 48px);
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
   color:#fff;
   opacity:0;
   transform:translateY(20px);
   transition:.35s ease;
+  display:flex;
+  flex-direction:column;
   overflow:hidden;
 }
 
@@ -98,10 +100,13 @@ body{
   transform:none;
 }
 
-/* ===== FRANJA SUPERIOR ===== */
+/* ===== HEADER FIJO ===== */
 .app-header{
-  height:52px;
-  background:#E3E0DF;
+  position:sticky;
+  top:0;
+  z-index:10;
+  height:48px;
+  background:#e4e1df;
   color:#333;
   display:flex;
   align-items:center;
@@ -111,8 +116,11 @@ body{
 }
 
 /* ===== BUSCADOR FIJO ===== */
-.search-fixed{
-  padding:16px;
+.search-wrapper{
+  position:sticky;
+  top:48px;
+  z-index:9;
+  padding:14px;
   background:linear-gradient(160deg, #7a1f2b, #5e1620);
 }
 
@@ -139,11 +147,11 @@ body{
   background:transparent;
 }
 
-/* ===== RESULTADOS (SCROLL) ===== */
+/* ===== RESULTADOS SCROLL INDEPENDIENTE ===== */
 #res{
-  padding:16px;
+  flex:1;
   overflow-y:auto;
-  max-height:calc(100vh - 52px - 96px);
+  padding:16px;
 }
 
 /* ===== ITEMS ===== */
@@ -167,7 +175,6 @@ body{
 
 .item div:last-child{
   font-size:16px;
-  opacity:.9;
 }
 
 /* ===== RESALTADO ===== */
@@ -202,7 +209,7 @@ mark{
     EMPORIO CUSCO SPA
   </div>
 
-  <div class="search-fixed">
+  <div class="search-wrapper">
     <div class="search-box">
       <span class="search-icon">🔍</span>
       <input id="q" placeholder="Buscar producto o código">
@@ -210,17 +217,16 @@ mark{
   </div>
 
   <div id="res"></div>
+
 </div>
 
 </div>
 
 <script>
-/* ===== CONFIG ===== */
 const PASSWORD = "admin2026@";
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 let DATA = [];
 
-/* ===== LOGIN ===== */
 function auth(){
   if(document.getElementById("pwd").value === PASSWORD){
     document.getElementById("login").classList.add("hide");
@@ -232,59 +238,41 @@ function auth(){
   }
 }
 
-/* ===== UTIL ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
 
-/* ===== CARGA CSV ===== */
 fetch(CSV_URL)
-  .then(r => r.text())
-  .then(text => {
-    const lines = text.trim().split("\n").map(l => l.split(","));
-    const headers = lines.shift();
-
-    DATA = lines.map(row => {
-      let o = {};
-      headers.forEach((h,i)=>o[h.trim()] = row[i] || "");
+  .then(r=>r.text())
+  .then(text=>{
+    const lines=text.trim().split("\n").map(l=>l.split(","));
+    const headers=lines.shift();
+    DATA=lines.map(row=>{
+      let o={};
+      headers.forEach((h,i)=>o[h.trim()]=row[i]||"");
       return {
-        codigo: o.Código || o.Codigo || "",
-        nombre: o.Nombre || "",
-        precio: o.Precio1 || o.Precio || ""
+        codigo:o.Código||o.Codigo||"",
+        nombre:o.Nombre||"",
+        precio:o.Precio1||o.Precio||""
       };
     });
   });
 
-/* ===== BUSCADOR ===== */
-document.getElementById("q").addEventListener("input", ()=>{
-  const raw = q.value.trim();
-  const k = norm(raw);
-  const res = document.getElementById("res");
+document.getElementById("q").addEventListener("input",()=>{
+  const raw=q.value.trim();
+  const k=norm(raw);
+  const res=document.getElementById("res");
+  res.innerHTML="";
+  if(!k) return;
 
-  res.innerHTML = "";
-  if(k.length === 0) return;
-
-  const isNumberSearch = /^\d+$/.test(raw);
-
-  let results = DATA.filter(x=>{
-    if(isNumberSearch){
-      return x.codigo.startsWith(raw);
-    }
-    return norm(x.nombre).includes(k) || x.codigo.includes(raw);
-  });
-
-  results.slice(0,15).forEach(x=>{
-    let nombre = x.nombre;
-    if(!isNumberSearch){
-      const reg = new RegExp(`(${raw})`, "ig");
-      nombre = x.nombre.replace(reg, "<mark>$1</mark>");
-    }
-
-    const d = document.createElement("div");
-    d.className = "item";
-    d.innerHTML = `
+  DATA.filter(x =>
+    norm(x.nombre).includes(k) || x.codigo.includes(raw)
+  ).slice(0,15).forEach(x=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`
       <div><strong>${x.codigo}</strong></div>
-      <div>${nombre}</div>
+      <div>${x.nombre}</div>
       <div>$${x.precio}</div>
     `;
     res.appendChild(d);
