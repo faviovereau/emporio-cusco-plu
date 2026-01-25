@@ -153,14 +153,14 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
 /* ===== RESULTADOS ===== */
 .results{
-  max-width:82%;              /* 👈 igual al buscador */
+  max-width:82%;
   margin:0 auto;
 
   height:calc(100vh - 230px);
   overflow-y:auto;
   padding:16px;
 
-  border-top:1px solid rgba(0,0,0,.05); /* separador invisible */
+  border-top:1px solid rgba(0,0,0,.05);
 }
 
 .item{
@@ -175,20 +175,17 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
   animation:pop .18s ease-out;
   transition:transform .15s ease, box-shadow .15s ease;
-}
-.item{
+
   cursor:pointer;
 }
 
 .item:active{
   background:#f7f7f7;
-}
-.item:active{
   transform:scale(.98);
   box-shadow:0 4px 10px rgba(0,0,0,.18);
 }
 
-/* ===== JERARQUÍA TEXTO ===== */
+/* ===== TEXTO ===== */
 .code{
   font-size:26px;
   font-weight:800;
@@ -243,15 +240,18 @@ body:has(#login:not([style*="display: none"])) .wrap{
     </div>
   </div>
 
-  <div id="res" class="results"></div>
+  <!-- doble tap aquí limpia buscador -->
+  <div id="res" class="results" ondblclick="clearSearch()"></div>
 
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const PASSWORD="admin2026@";
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
 let DATA=[];
 
+/* ===== AUTH ===== */
 function auth(){
   if(pwd.value===PASSWORD){
     login.style.display="none";
@@ -259,16 +259,25 @@ function auth(){
   }else alert("Contraseña incorrecta");
 }
 
+/* ===== UTILS ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
+
+/* ===== UX ===== */
 function fillSearch(el){
-  const nombre = el.dataset.nombre;
-  q.value = nombre;
+  q.value = el.dataset.nombre;
   q.dispatchEvent(new Event("input"));
   q.focus();
 }
 
+function clearSearch(){
+  q.value = "";
+  res.innerHTML = "";
+  q.focus();
+}
+
+/* ===== DATA ===== */
 fetch(CSV_URL)
 .then(r=>r.text())
 .then(t=>{
@@ -279,23 +288,23 @@ fetch(CSV_URL)
   });
 });
 
+/* ===== SEARCH ===== */
 q.addEventListener("input",()=>{
   const k=norm(q.value);
   res.innerHTML="";
-  if(!k)return;
+  if(!k) return;
 
   DATA.filter(x=>norm(x.nombre).includes(k)||x.codigo.includes(q.value))
   .slice(0,20)
   .forEach(x=>{
     res.innerHTML+=`
-  <div class="item" 
-       ondblclick="fillSearch(this)" 
-       data-nombre="${x.nombre}">
-       
-    <div class="code">${x.codigo}</div>
-    <div class="name">${x.nombre}</div>
-    <div class="price">$${x.precio}</div>
-  </div>`;
+      <div class="item"
+           ondblclick="fillSearch(this)"
+           data-nombre="${x.nombre}">
+        <div class="code">${x.codigo}</div>
+        <div class="name">${x.nombre}</div>
+        <div class="price">$${x.precio}</div>
+      </div>`;
   });
 });
 </script>
