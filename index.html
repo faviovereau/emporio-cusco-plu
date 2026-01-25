@@ -176,7 +176,13 @@ body:has(#login:not([style*="display: none"])) .wrap{
   animation:pop .18s ease-out;
   transition:transform .15s ease, box-shadow .15s ease;
 }
+.item{
+  cursor:pointer;
+}
 
+.item:active{
+  background:#f7f7f7;
+}
 .item:active{
   transform:scale(.98);
   box-shadow:0 4px 10px rgba(0,0,0,.18);
@@ -256,6 +262,12 @@ function auth(){
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
+function fillSearch(el){
+  const nombre = el.dataset.nombre;
+  q.value = nombre;
+  q.dispatchEvent(new Event("input"));
+  q.focus();
+}
 
 fetch(CSV_URL)
 .then(r=>r.text())
@@ -276,11 +288,14 @@ q.addEventListener("input",()=>{
   .slice(0,20)
   .forEach(x=>{
     res.innerHTML+=`
-      <div class="item">
-        <div class="code">${x.codigo}</div>
-        <div class="name">${x.nombre}</div>
-        <div class="price">$${x.precio}</div>
-      </div>`;
+  <div class="item" 
+       ondblclick="fillSearch(this)" 
+       data-nombre="${x.nombre}">
+       
+    <div class="code">${x.codigo}</div>
+    <div class="name">${x.nombre}</div>
+    <div class="price">$${x.precio}</div>
+  </div>`;
   });
 });
 </script>
