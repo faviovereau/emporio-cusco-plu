@@ -265,7 +265,8 @@ function norm(s){
 }
 
 /* ===== UX ===== */
-function fillSearch(el){
+function fillSearch(el, ev){
+  ev.stopPropagation();   // 👈 CLAVE
   q.value = el.dataset.nombre;
   q.dispatchEvent(new Event("input"));
   q.focus();
@@ -299,7 +300,7 @@ q.addEventListener("input",()=>{
   .forEach(x=>{
     res.innerHTML+=`
       <div class="item"
-           ondblclick="fillSearch(this)"
+           ondblclick="fillSearch(this, event)"
            data-nombre="${x.nombre}">
         <div class="code">${x.codigo}</div>
         <div class="name">${x.nombre}</div>
