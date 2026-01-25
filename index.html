@@ -16,10 +16,10 @@ body{
 }
 
 .wrap{
-  max-width:420px;
-  margin:auto;
-  padding:16px;
   min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 /* ===== LOGIN (INTOCABLE) ===== */
@@ -98,12 +98,24 @@ body{
 /* ===== BUSCADOR FIJO ===== */
 .search-container{
   position:sticky;
-  top:68px;
+  top:58px;
+  margin:0 8px 18px;
+  padding:22px 18px 26px;
+
+  background:linear-gradient(
+    160deg,
+    #7a1f2b 0%,
+    #641823 60%,
+    #56131c 100%
+  );
+
+  border-radius:28px; /* 👈 OVALADO TOTAL */
+
+  box-shadow:
+    0 22px 36px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.15);
+
   z-index:9;
-  padding:18px;
-  background:linear-gradient(160deg,#7a1f2b,#56131c);
-  border-radius:0 0 26px 26px;
-  box-shadow:0 18px 32px rgba(0,0,0,.45);
 }
 
 .search-box{
@@ -172,6 +184,13 @@ body{
 .price{
   color:#555;
 }
+  /* ===== FIX LOGIN POSICIÓN ===== */
+body:has(#login:not(.hide)) .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
 </style>
 </head>
 
