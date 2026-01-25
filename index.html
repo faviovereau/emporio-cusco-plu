@@ -30,6 +30,14 @@ body{
   box-shadow:0 20px 40px rgba(0,0,0,.35);
   animation:loginIn .45s ease-out forwards;
 }
+  .search-box input{
+  border:0;
+  outline:none;
+  font-size:17px;
+  width:100%;
+  background:transparent;
+  color:#222;
+}
 
 @keyframes loginIn{
   from{ opacity:0; transform:translateY(20px) scale(.98); }
@@ -101,19 +109,24 @@ body{
 .search-box{
   display:flex;
   align-items:center;
-  background:linear-gradient(145deg,#fff,#f1f1f1);
-  border-radius:20px;
-  padding:18px 20px;
+
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border-radius: 999px; /* 👈 oval total */
+  padding: 18px 22px;
+
   box-shadow:
-    0 10px 22px rgba(0,0,0,.35),
+    0 12px 26px rgba(0,0,0,.30),
     inset 0 2px 4px rgba(255,255,255,.9),
-    inset 0 -1px 2px rgba(0,0,0,.08);
-  transition:box-shadow .2s ease;
+    inset 0 -2px 3px rgba(0,0,0,.08);
+
+  transition:
+    box-shadow .25s ease,
+    transform .25s ease;
 }
 
-.search-box:focus-within{
+  .search-box:focus-within{
   box-shadow:
-    0 14px 28px rgba(0,0,0,.45),
+    0 18px 34px rgba(0,0,0,.38),
     inset 0 2px 4px rgba(255,255,255,.95);
 }
 
@@ -129,6 +142,7 @@ body{
   font-size:17px;
   width:100%;
   background:transparent;
+  color:#222;
 }
 
 /* ===== RESULTADOS ===== */
