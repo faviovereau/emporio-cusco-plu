@@ -153,12 +153,14 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
 /* ===== RESULTADOS ===== */
 .results{
-  max-width:82%;
+  max-width:82%;              /* 👈 igual al buscador */
   margin:0 auto;
 
   height:calc(100vh - 230px);
   overflow-y:auto;
   padding:16px;
+
+  border-top:1px solid rgba(0,0,0,.05); /* separador invisible */
 }
 
 .item{
@@ -166,20 +168,47 @@ body:has(#login:not([style*="display: none"])) .wrap{
   border-radius:18px;
   padding:18px;
   margin-bottom:16px;
-  box-shadow:0 6px 14px rgba(0,0,0,.18);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.14),
+    inset 0 1px 0 rgba(255,255,255,.8);
+
+  animation:pop .18s ease-out;
+  transition:transform .15s ease, box-shadow .15s ease;
 }
 
+.item:active{
+  transform:scale(.98);
+  box-shadow:0 4px 10px rgba(0,0,0,.18);
+}
+
+/* ===== JERARQUÍA TEXTO ===== */
 .code{
   font-size:26px;
   font-weight:800;
+  color:#7a1f2b;
 }
 
 .name{
   font-weight:700;
+  color:#222;
 }
 
 .price{
-  color:#555;
+  color:#6b6b6b;
+  font-weight:500;
+}
+
+/* ===== ANIMACIÓN ===== */
+@keyframes pop{
+  from{
+    opacity:0;
+    transform:translateY(6px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 </style>
 </head>
@@ -198,6 +227,7 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
 <!-- APP -->
 <div id="app">
+
   <div class="app-header">EMPORIO CUSCO SPA</div>
 
   <div class="search-container">
@@ -208,6 +238,7 @@ body:has(#login:not([style*="display: none"])) .wrap{
   </div>
 
   <div id="res" class="results"></div>
+
 </div>
 
 <script>
