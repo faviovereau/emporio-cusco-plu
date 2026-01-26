@@ -21,23 +21,26 @@ body{
   flex-direction:column;
 }
 
-/* ===== LOGIN (INTOCABLE) ===== */
+/* ===== LOGIN ===== */
 #login{
-  background:linear-gradient(160deg, #ffffff, #f4f4f4);
-  padding:22px;
+  background:linear-gradient(160deg,#fff,#f4f4f4);
+  padding:26px;
   border-radius:22px;
   box-shadow:0 20px 40px rgba(0,0,0,.35);
   animation:loginIn .45s ease-out forwards;
+  width:90%;
+  max-width:380px;
 }
 
 @keyframes loginIn{
-  from{ opacity:0; transform:translateY(20px) scale(.98); }
-  to{ opacity:1; transform:none; }
+  from{opacity:0;transform:translateY(20px) scale(.98);}
+  to{opacity:1;transform:none;}
 }
 
 .login-row{
   display:flex;
   gap:12px;
+  margin-bottom:12px;
 }
 
 #login input{
@@ -49,24 +52,24 @@ body{
 }
 
 #login button{
-  padding:16px;
+  padding:16px 18px;
   border-radius:16px;
   border:0;
   font-weight:600;
-  background:linear-gradient(160deg, #7a1f2b, #5e1620);
+  background:linear-gradient(160deg,#7a1f2b,#5e1620);
   color:#fff;
 }
 
 .login-brand{
-  margin-top:24px;
+  margin-top:18px;
   text-align:center;
-  font-weight:600;
+  font-weight:700;
   letter-spacing:1.5px;
   color:#777;
 }
 
-/* LOGIN CENTRADO */
-body:has(#login:not([style*="display: none"])) .wrap{
+/* Login centrado */
+body:has(#login:not(.hide)) .wrap{
   justify-content:center;
   align-items:center;
 }
@@ -77,63 +80,61 @@ body:has(#login:not([style*="display: none"])) .wrap{
   height:100vh;
 }
 
-/* ===== HEADER EMPRESA ===== */
+/* ===== HEADER ===== */
 .app-header{
   position:sticky;
   top:0;
   z-index:10;
-
   max-width:92%;
   margin:14px auto;
-
   background:linear-gradient(180deg,#efefec,#e6e5e1);
   padding:14px;
+  border-radius:18px;
   text-align:center;
   font-weight:700;
   letter-spacing:1.6px;
-  border-radius:18px;
-
   box-shadow:0 6px 14px rgba(0,0,0,.18);
+}
+
+/* ===== SESIÓN ===== */
+.session-bar{
+  max-width:92%;
+  margin:0 auto 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  color:#555;
+}
+
+.session-bar button{
+  background:none;
+  border:0;
+  color:#7a1f2b;
+  font-weight:700;
+  cursor:pointer;
 }
 
 /* ===== BUSCADOR ===== */
 .search-container{
   position:sticky;
-  top:72px;
+  top:110px;
   z-index:9;
-
   max-width:82%;
   margin:0 auto 18px;
-
   padding:22px 18px 26px;
   background:linear-gradient(160deg,#7a1f2b,#641823 60%,#56131c);
   border-radius:30px;
-
-  box-shadow:
-    0 22px 36px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.15);
+  box-shadow:0 22px 36px rgba(0,0,0,.45);
 }
 
 .search-box{
   display:flex;
   align-items:center;
-
-  background:linear-gradient(145deg,#ffffff,#f0f0f0);
+  background:linear-gradient(145deg,#fff,#f0f0f0);
   border-radius:999px;
   padding:18px 22px;
-
-  box-shadow:
-    0 12px 26px rgba(0,0,0,.30),
-    inset 0 2px 4px rgba(255,255,255,.9),
-    inset 0 -2px 3px rgba(0,0,0,.08);
-
-  transition:box-shadow .25s ease;
-}
-
-.search-box:focus-within{
-  box-shadow:
-    0 18px 34px rgba(0,0,0,.38),
-    inset 0 2px 4px rgba(255,255,255,.95);
+  box-shadow:0 12px 26px rgba(0,0,0,.30);
 }
 
 .search-icon{
@@ -147,20 +148,15 @@ body:has(#login:not([style*="display: none"])) .wrap{
   outline:none;
   font-size:17px;
   width:100%;
-  background:transparent;
-  color:#222;
 }
 
 /* ===== RESULTADOS ===== */
 .results{
   max-width:82%;
   margin:0 auto;
-
-  height:calc(100vh - 230px);
+  height:calc(100vh - 260px);
   overflow-y:auto;
   padding:16px;
-
-  border-top:1px solid rgba(0,0,0,.05);
 }
 
 .item{
@@ -168,24 +164,15 @@ body:has(#login:not([style*="display: none"])) .wrap{
   border-radius:18px;
   padding:18px;
   margin-bottom:16px;
-
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.14),
-    inset 0 1px 0 rgba(255,255,255,.8);
-
-  animation:pop .18s ease-out;
-  transition:transform .15s ease, box-shadow .15s ease;
-
+  box-shadow:0 8px 18px rgba(0,0,0,.14);
   cursor:pointer;
 }
 
 .item:active{
-  background:#f7f7f7;
   transform:scale(.98);
-  box-shadow:0 4px 10px rgba(0,0,0,.18);
+  background:#f7f7f7;
 }
 
-/* ===== TEXTO ===== */
 .code{
   font-size:26px;
   font-weight:800;
@@ -194,25 +181,14 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
 .name{
   font-weight:700;
-  color:#222;
 }
 
 .price{
   color:#6b6b6b;
-  font-weight:500;
 }
 
-/* ===== ANIMACIÓN ===== */
-@keyframes pop{
-  from{
-    opacity:0;
-    transform:translateY(6px) scale(.98);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
+/* ===== UTIL ===== */
+.hide{display:none;}
 </style>
 </head>
 
@@ -221,6 +197,9 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
 <!-- LOGIN -->
 <div id="login">
+  <div class="login-row">
+    <input id="user" placeholder="Usuario">
+  </div>
   <div class="login-row">
     <input id="pwd" type="password" placeholder="Contraseña">
     <button onclick="auth()">Entrar</button>
@@ -233,6 +212,11 @@ body:has(#login:not([style*="display: none"])) .wrap{
 
   <div class="app-header">EMPORIO CUSCO SPA</div>
 
+  <div class="session-bar">
+    <div id="sessionInfo"></div>
+    <button onclick="logout()">Salir</button>
+  </div>
+
   <div class="search-container">
     <div class="search-box">
       <span class="search-icon">🔍</span>
@@ -240,45 +224,56 @@ body:has(#login:not([style*="display: none"])) .wrap{
     </div>
   </div>
 
-  <!-- doble tap aquí limpia buscador -->
-  <div id="res" class="results" ondblclick="clearSearch()"></div>
+  <div id="res" class="results"></div>
 
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-const PASSWORD="admin2026@";
+/* ===== USUARIOS ===== */
+const USERS = [
+  {user:"admin", pass:"admin2026@", role:"ADM"},
+  {user:"caja1", pass:"1234", role:"USER"},
+  {user:"bodega", pass:"5678", role:"USER"}
+];
+
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
+
 let DATA=[];
 
-/* ===== AUTH ===== */
+/* ===== LOGIN ===== */
 function auth(){
-  if(pwd.value===PASSWORD){
-    login.style.display="none";
-    app.style.display="block";
-  }else alert("Contraseña incorrecta");
+  const u = user.value.trim();
+  const p = pwd.value;
+  const found = USERS.find(x=>x.user===u && x.pass===p);
+  if(!found) return alert("Usuario o contraseña incorrecta");
+
+  localStorage.setItem("session", JSON.stringify(found));
+  startApp(found);
 }
 
-/* ===== UTILS ===== */
+function startApp(session){
+  login.classList.add("hide");
+  app.style.display="block";
+  sessionInfo.innerHTML =
+    `👤 ${session.user} ${session.role==="ADM"?"⭐ ADM":""}`;
+}
+
+function logout(){
+  localStorage.removeItem("session");
+  location.reload();
+}
+
+/* ===== SESSION AUTO ===== */
+const saved = localStorage.getItem("session");
+if(saved){
+  startApp(JSON.parse(saved));
+}
+
+/* ===== BUSCADOR ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
 
-/* ===== UX ===== */
-function fillSearch(el, ev){
-  ev.stopPropagation();   // 👈 CLAVE
-  q.value = el.dataset.nombre;
-  q.dispatchEvent(new Event("input"));
-  q.focus();
-}
-
-function clearSearch(){
-  q.value = "";
-  res.innerHTML = "";
-  q.focus();
-}
-
-/* ===== DATA ===== */
 fetch(CSV_URL)
 .then(r=>r.text())
 .then(t=>{
@@ -289,7 +284,6 @@ fetch(CSV_URL)
   });
 });
 
-/* ===== SEARCH ===== */
 q.addEventListener("input",()=>{
   const k=norm(q.value);
   res.innerHTML="";
@@ -299,9 +293,7 @@ q.addEventListener("input",()=>{
   .slice(0,20)
   .forEach(x=>{
     res.innerHTML+=`
-      <div class="item"
-           ondblclick="fillSearch(this, event)"
-           data-nombre="${x.nombre}">
+      <div class="item">
         <div class="code">${x.codigo}</div>
         <div class="name">${x.nombre}</div>
         <div class="price">$${x.precio}</div>
