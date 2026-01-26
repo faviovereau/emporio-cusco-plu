@@ -15,21 +15,24 @@ body{
     linear-gradient(180deg, #f6f7f9 0%, #eceff3 100%);
 }
 
-.wrap{
-  min-height:100vh;
+/* ================= LOGIN GATE ================= */
+#login-gate{
+  position:fixed;
+  inset:0;
   display:flex;
-  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
 }
 
-/* ===== LOGIN ===== */
-#login{
+.login-card{
+  width:90%;
+  max-width:380px;
   background:linear-gradient(160deg,#fff,#f4f4f4);
   padding:26px;
   border-radius:22px;
   box-shadow:0 20px 40px rgba(0,0,0,.35);
   animation:loginIn .45s ease-out forwards;
-  width:90%;
-  max-width:380px;
 }
 
 @keyframes loginIn{
@@ -43,7 +46,7 @@ body{
   margin-bottom:12px;
 }
 
-#login input{
+.login-card input{
   flex:1;
   padding:16px;
   font-size:16px;
@@ -51,13 +54,14 @@ body{
   border:1px solid #ddd;
 }
 
-#login button{
+.login-card button{
   padding:16px 18px;
   border-radius:16px;
   border:0;
   font-weight:600;
   background:linear-gradient(160deg,#7a1f2b,#5e1620);
   color:#fff;
+  cursor:pointer;
 }
 
 .login-brand{
@@ -68,16 +72,16 @@ body{
   color:#777;
 }
 
-/* Login centrado */
-body:has(#login:not(.hide)) .wrap{
-  justify-content:center;
-  align-items:center;
+.login-error{
+  font-size:13px;
+  color:#b00020;
+  margin-top:6px;
+  display:none;
 }
 
-/* ===== APP ===== */
+/* ================= APP (V1.1 INTACTA) ================= */
 #app{
   display:none;
-  height:100vh;
 }
 
 /* ===== HEADER ===== */
@@ -115,7 +119,7 @@ body:has(#login:not(.hide)) .wrap{
   cursor:pointer;
 }
 
-/* ===== BUSCADOR ===== */
+/* ===== BUSCADOR (NO TOCADO) ===== */
 .search-container{
   position:sticky;
   top:110px;
@@ -179,35 +183,31 @@ body:has(#login:not(.hide)) .wrap{
   color:#7a1f2b;
 }
 
-.name{
-  font-weight:700;
-}
-
-.price{
-  color:#6b6b6b;
-}
-
-/* ===== UTIL ===== */
-.hide{display:none;}
+.name{font-weight:700;}
+.price{color:#6b6b6b;}
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-<!-- LOGIN -->
-<div id="login">
-  <div class="login-row">
-    <input id="user" placeholder="Usuario">
+<!-- ================= LOGIN ================= -->
+<div id="login-gate">
+  <div class="login-card">
+    <div class="login-row">
+      <input id="lg-user" placeholder="Usuario">
+    </div>
+    <div class="login-row">
+      <input id="lg-pass" type="password" placeholder="Contraseña">
+      <button onclick="login()">Entrar</button>
+    </div>
+    <div id="login-error" class="login-error">
+      Usuario o contraseña incorrecta
+    </div>
+    <div class="login-brand">EMPORIO CUSCO SPA</div>
   </div>
-  <div class="login-row">
-    <input id="pwd" type="password" placeholder="Contraseña">
-    <button onclick="auth()">Entrar</button>
-  </div>
-  <div class="login-brand">EMPORIO CUSCO SPA</div>
 </div>
 
-<!-- APP -->
+<!-- ================= APP V1.1 ================= -->
 <div id="app">
 
   <div class="app-header">EMPORIO CUSCO SPA</div>
@@ -237,24 +237,25 @@ const USERS = [
 ];
 
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQFNKacvGEXGdsn5IkcjYgdW8nBIM1UFZL5sjhxPa9JDJnn3DA962sjDaJ9bv1aGA/pub?gid=915072749&single=true&output=csv";
-
 let DATA=[];
 
 /* ===== LOGIN ===== */
-function auth(){
-  const u = user.value.trim();
-  const p = pwd.value;
+function login(){
+  const u = document.getElementById("lg-user").value.trim();
+  const p = document.getElementById("lg-pass").value;
   const found = USERS.find(x=>x.user===u && x.pass===p);
-  if(!found) return alert("Usuario o contraseña incorrecta");
-
+  if(!found){
+    document.getElementById("login-error").style.display="block";
+    return;
+  }
   localStorage.setItem("session", JSON.stringify(found));
   startApp(found);
 }
 
 function startApp(session){
-  login.classList.add("hide");
-  app.style.display="block";
-  sessionInfo.innerHTML =
+  document.getElementById("login-gate").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("sessionInfo").innerHTML =
     `👤 ${session.user} ${session.role==="ADM"?"⭐ ADM":""}`;
 }
 
@@ -263,13 +264,13 @@ function logout(){
   location.reload();
 }
 
-/* ===== SESSION AUTO ===== */
+/* ===== AUTO SESSION ===== */
 const saved = localStorage.getItem("session");
 if(saved){
   startApp(JSON.parse(saved));
 }
 
-/* ===== BUSCADOR ===== */
+/* ===== BUSCADOR (INTACTO) ===== */
 function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
