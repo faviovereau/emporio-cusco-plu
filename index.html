@@ -127,11 +127,11 @@ body:has(#login:not([style*="display: none"])) .wrap{justify-content:center;alig
     </div>
   </div>
 
-  <div id="res" class="results" ondblclick="clearSearch()"></div>
+  <div id="res" class="results" onclick="onResultsTap(event)"></div>
 </div>
 
 <!-- BARCODE -->
-<div id="overlay" ondblclick="closeBarcode()">
+<div id="overlay" onclick="onOverlayTap(event)">
   <div class="barcode-card">
     <div id="barcodeText" class="barcode-code"></div>
     <svg id="barcode"></svg>
@@ -154,8 +154,37 @@ function norm(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 }
 
+/* ===== DOBLE-TAP MANUAL =====
+   dblclick nativo no es confiable en móvil, sobre todo con
+   touch-action:manipulation (que ya no sintetiza dblclick).
+   Medimos el tiempo entre dos clics/taps sobre el mismo elemento. */
+const tapMap=new WeakMap();
+const DOUBLE_TAP_MS=350;
+
+function isDoubleTap(key){
+  const now=Date.now();
+  const last=tapMap.get(key)||0;
+  tapMap.set(key,now);
+  return (now-last)<DOUBLE_TAP_MS;
+}
+
+function onItemTap(el,ev){
+  if(isDoubleTap(el)){
+    ev.stopPropagation();
+    fillSearch(el,ev);
+  }
+}
+
+function onResultsTap(ev){
+  if(ev.target.closest(".item"))return; // el item ya maneja su propio doble-tap
+  if(isDoubleTap(res)) clearSearch();
+}
+
+function onOverlayTap(ev){
+  if(isDoubleTap(overlay)) closeBarcode();
+}
+
 function fillSearch(el,ev){
-  ev.stopPropagation();
   q.value=el.dataset.nombre;
   q.dispatchEvent(new Event("input"));
   q.focus();
@@ -220,7 +249,7 @@ q.addEventListener("input",()=>{
   .forEach(x=>{
     res.innerHTML+=`
     <div class="item"
-      ondblclick="fillSearch(this,event)"
+      onclick="onItemTap(this,event)"
       data-nombre="${x.nombre}"
       data-codigo="${x.codigo}">
       <div class="code">${x.codigo}</div>
