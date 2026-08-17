@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>EMPORIO CUSCO SPA</title>
 
 <!-- BARCODE -->
@@ -10,6 +10,10 @@
 
 <style>
 /* ===== BASE ===== */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
 body{
   font-family:'Inter', Arial, Helvetica, sans-serif;
   margin:0;
@@ -18,7 +22,7 @@ body{
     linear-gradient(180deg, #f6f7f9 0%, #eceff3 100%);
 }
 
-.wrap{min-height:100vh;display:flex;flex-direction:column;}
+.wrap{min-height:100dvh;display:flex;flex-direction:column;}
 
 /* ===== LOGIN (INTOCABLE) ===== */
 #login{
@@ -27,13 +31,13 @@ body{
   box-shadow:0 20px 40px rgba(0,0,0,.35);
 }
 .login-row{display:flex;gap:12px;}
-#login input{flex:1;padding:16px;border-radius:16px;border:1px solid #ddd;}
-#login button{padding:16px;border-radius:16px;border:0;background:#7a1f2b;color:#fff;}
+#login input{flex:1;padding:16px;border-radius:16px;border:1px solid #ddd;font-size:17px;}
+#login button{padding:16px;border-radius:16px;border:0;background:#7a1f2b;color:#fff;touch-action:manipulation;}
 .login-brand{text-align:center;margin-top:20px;color:#777;}
 body:has(#login:not([style*="display: none"])) .wrap{justify-content:center;align-items:center;}
 
 /* ===== APP ===== */
-#app{display:none;height:100vh;}
+#app{display:none;height:100dvh;}
 .app-header{
   position:sticky;top:0;z-index:10;
   max-width:92%;margin:14px auto;
@@ -60,14 +64,16 @@ body:has(#login:not([style*="display: none"])) .wrap{justify-content:center;alig
 /* ===== RESULTADOS ===== */
 .results{
   max-width:82%;margin:0 auto;
-  height:calc(100vh - 230px);
+  height:calc(100dvh - 230px);
   overflow-y:auto;padding:16px;
+  touch-action:manipulation;
 }
 .item{
   background:#fff;border-radius:18px;
   padding:18px;margin-bottom:16px;
   box-shadow:0 8px 18px rgba(0,0,0,.14);
   cursor:pointer;
+  touch-action:manipulation;
 }
 .item:active{transform:scale(.98);background:#f7f7f7;}
 .code{font-size:26px;font-weight:800;color:#7a1f2b;}
@@ -80,6 +86,7 @@ body:has(#login:not([style*="display: none"])) .wrap{justify-content:center;alig
   background:rgba(0,0,0,.45);
   display:none;align-items:center;justify-content:center;
   z-index:999;
+  touch-action:manipulation;
 }
 .barcode-card{
   background:#fff;
@@ -173,12 +180,32 @@ function closeBarcode(){
   overlay.style.display="none";
 }
 
+// Parseo de CSV que respeta comas dentro de comillas (ej: "Arroz, 1kg")
+function parseCSVLine(line){
+  const result=[];
+  let cur="";
+  let inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){
+      inQuotes=!inQuotes;
+    }else if(ch===','&&!inQuotes){
+      result.push(cur.trim());
+      cur="";
+    }else{
+      cur+=ch;
+    }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
 fetch(CSV_URL)
 .then(r=>r.text())
 .then(t=>{
   const [_,...rows]=t.trim().split("\n");
   DATA=rows.map(r=>{
-    const c=r.split(",");
+    const c=parseCSVLine(r);
     return {codigo:c[0],nombre:c[1],precio:c[2]};
   });
 });
