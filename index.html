@@ -187,10 +187,14 @@ function onOverlayTap(ev){
 function fillSearch(el,ev){
   q.value=el.dataset.nombre;
   q.dispatchEvent(new Event("input"));
-  q.focus();
 
   const code=el.dataset.codigo;
-  if(code.length>=6) showBarcode(code);
+  if(code.length>=6){
+    q.blur(); // cierra el teclado para que no tape el código de barras
+    showBarcode(code);
+  }else{
+    q.focus();
+  }
 }
 
 function clearSearch(){
@@ -200,6 +204,7 @@ function clearSearch(){
 }
 
 function showBarcode(code){
+  if(document.activeElement) document.activeElement.blur();
   overlay.style.display="flex";
   barcodeText.textContent=code;
   JsBarcode("#barcode", code, {format:"CODE128",width:2,height:80});
